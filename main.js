@@ -29,19 +29,37 @@ var client = new craigslist.Client({
 var processListing = function(list, details) {
     console.log("Listing: ", list);
     console.log('\n\n\n');
-
     console.log("Details: ", details);
     console.log('\n\n\n');
 
-    var mapkeyword = details.mapUrl;
-    mapkeyword = mapkeyword.replace("https://maps.google.com/?q=loc%3A+", "");
-    mapkeyword = mapkeyword.replace(/\+/g, " ");
-    var info = [details.title, list.location, list.price, details.description, details.url, details.mapUrl, mapkeyword];
+    var mapkeyword = "";
+    if ('mapUrl' in details) {
+        mapkeyword = decodeURIComponent(details.mapUrl);
+        if (mapkeyword.includes("https://maps.google.com/?q=loc:")) {
+            // https://maps.google.com/?q=loc%3A+Forest+grove+dr+at+Fairway+Daly+City+CA+US
+            // becomes
+            // https://maps.google.com/?q=loc:+Forest+grove+dr+at+Fairway+Daly+City+CA+US
+            mapkeyword = mapkeyword.replace("https://maps.google.com/?q=loc:", "");
+            mapkeyword = mapkeyword.replace(/\+/g, " ");
+        } else if (mapkeyword.includes("https://maps.google.com/maps/preview/@")) {
+            // https://maps.google.com/maps/preview/@37.751571,-122.429659,16z
+            // becomes
+            // https://maps.google.com/maps/preview/@37.751571,-122.429659,16z
+            mapkeyword = mapkeyword.replace("https://maps.google.com/maps/preview/@", "");
+            mapkeyword = mapkeyword.split(',').slice(0,2).join(", ");
+            // becomes "37.751571, -122.429659"
+        } else {
+            // We haven't seen this type before
+            console.log("# New Map URL Type:", mapkeyword)
+        }
+    }
 
-    console.log(info.join(' | '));
+    // details.description = "";
+    var info = [details.title, list.location, list.price, details.description, details.url, details.mapUrl, mapkeyword];
+    // console.log(info.join(' | '));
     csvWriter.writeRecords([ info ])
         .then(() => {
-            console.log('...Done');
+            // console.log('...Done');
         });
 }
 
