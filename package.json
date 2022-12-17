@@ -1,0 +1,24 @@
+{
+  "name": "craigslist-roomexporter",
+  "version": "1.0.0",
+  "description": "Slowly scrape rooms for rent from Craigslist.",
+  "main": "main.js",
+  "dependencies": {
+    "csv-writer": "^1.2.0",
+    "node-craigslist": "^1.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linux4life798/craigslist-roomexporter.git"
+  },
+  "author": "Craig Hesling",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/linux4life798/craigslist-roomexporter/issues"
+  },
+  "homepage": "https://github.com/linux4life798/craigslist-roomexporter#readme"
+}
